@@ -20,7 +20,7 @@ var (
 	// Local Node
 	LOCAL_NODE = "http://localhost:8545"
 	// Ethereum Client endpoint
-	ETHEREUM_CLIENT_URL = INFURA_MAINNET
+	ETHEREUM_CLIENT_URL = LOCAL_NODE
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 
 	t := time.Now()
 
-	log.Println("[ethereum] connecting..")
+	// log.Println("[ethereum] connecting..")
 
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
@@ -49,16 +49,15 @@ func main() {
 
 	log.Println("[grypto] initializing key generation sequence..")
 
-	acct := new(Account)
-
 	var accountsFound int
 
 	for i := 0; i < numKeys; i++ {
-		privateKey, err := genRandKey()
+		acct := new(Account)
+
+		err := acct.GenRandKey()
 		if err != nil {
 			log.Fatalf("[crypto] error generating key: %v\n", err)
 		}
-		acct.Private = privateKey
 
 		err = acct.Unlock()
 		if err != nil {
@@ -77,7 +76,7 @@ func main() {
 			}
 			accountsFound += 1
 		}
-		time.Sleep(time.Millisecond * 250)
+		// time.Sleep(time.Millisecond * 250)
 	}
 	log.Printf("[time] took %v seconds", time.Since(t).Seconds())
 	log.Printf("[grypto] keys found: %v\n", accountsFound)

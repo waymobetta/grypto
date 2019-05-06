@@ -80,12 +80,13 @@ func (a *Account) GetBalance(client *ethclient.Client) error {
 	return nil
 }
 
-func genRandKey() (string, error) {
+func (a *Account) GenRandKey() error {
 	bytes := make([]byte, 32)
 	if _, err := rand.Read(bytes); err != nil {
-		return "", err
+		return err
 	}
-	return hex.EncodeToString(bytes), nil
+	a.Private = hex.EncodeToString(bytes)
+	return nil
 }
 
 func genHeader() {
