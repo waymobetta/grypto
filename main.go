@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/ethereum/go-ethereum/ethclient"
+	log "github.com/sirupsen/logrus"
 	"github.com/waymobetta/wmb"
 )
 
@@ -40,8 +40,6 @@ func main() {
 
 	t := time.Now()
 
-	// log.Println("[ethereum] connecting..")
-
 	client, err := ethclient.Dial(ETHEREUM_CLIENT_URL)
 	if err != nil {
 		log.Fatalf("[ethereum] error connecting to client: %v\n", err)
@@ -51,7 +49,7 @@ func main() {
 
 	var accountsFound int
 
-	for i := 0; i < numKeys; i++ {
+	for len(numKeys) {
 		acct := new(Account)
 
 		err := acct.GenRandKey()
@@ -76,7 +74,8 @@ func main() {
 			}
 			accountsFound += 1
 		}
-		// time.Sleep(time.Millisecond * 250)
+		// delay to avoid rate limiting restrictions
+		time.Sleep(time.Millisecond * 500)
 	}
 	log.Printf("[time] took %v seconds", time.Since(t).Seconds())
 	log.Printf("[grypto] keys found: %v\n", accountsFound)
